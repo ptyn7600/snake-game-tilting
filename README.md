@@ -1,2 +1,2 @@
-# snake-game-tilting
+# Tilting Snake Game
 A snake game with Arduino
