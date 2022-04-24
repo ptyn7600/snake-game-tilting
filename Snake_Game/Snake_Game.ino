@@ -44,8 +44,8 @@ int snake_length = 3;      //Defines the initial snake body length
 // Snake direction - default = Right
 int snake_dir = RIGHT ;
 // --------- Food position -------------
-int food_x;   //Food position x
-int food_y;   //Food position y
+int food_x = 0;   //Food position x
+int food_y = 0;   //Food position y
 // Game speed
 unsigned int game_speed = 20;
 int game_mode = 0 ;
@@ -74,8 +74,7 @@ void setup(void)
   welcome();
   delay(2500);
   // ---- Showing the menu to start the game -----
-  // chose_game_control();
- 
+//   chose_game_control();
 }
 
 
@@ -91,7 +90,7 @@ void welcome()
     u8g.setFont(u8g_font_gdr14r);//coordinate function
     u8g.setPrintPos(0, 20);
     u8g.print("Snake Game");
-    u8g.setPrintPos(0, 38);
+    u8g.setPrintPos(0, 50);
     u8g.print("   Nhu Phan");
   } while (u8g.nextPage());
 }
@@ -101,9 +100,20 @@ void welcome()
    There are two modes: tilting to play or using the joystick
    return an integer that represents the chosen mode: 1 for tilting, 2 for joystick
 */
-void chose_game_control()
+void choose_game_control()
 {
   int flag = 1;
+  u8g.firstPage();
+  do
+  {
+    u8g.setFont(u8g_font_9x18);
+    u8g.setPrintPos(30, 20);
+    u8g.print("CONTROL");
+    u8g.setPrintPos(5, 40);
+    u8g.print("Tilting");
+    u8g.setPrintPos(5, 60);
+    u8g.print("Joystick");
+  } while (u8g.nextPage());
   while (flag)
   {
     int key = read_key();
@@ -113,9 +123,11 @@ void chose_game_control()
       do
       {
         u8g.setFont(u8g_font_9x18);
-        u8g.setPrintPos(5, 20);
-        u8g.print("Tilting  <");
+        u8g.setPrintPos(30, 20);
+        u8g.print("CONTROL");
         u8g.setPrintPos(5, 40);
+        u8g.print("Tilting  <");
+        u8g.setPrintPos(5, 60);
         u8g.print("Joystick");
       } while (u8g.nextPage());
       game_mode = 1;
@@ -126,10 +138,12 @@ void chose_game_control()
       do
       {
         u8g.setFont(u8g_font_9x18);
-        u8g.setPrintPos(5, 20);
-        u8g.print("Tilting");
+        u8g.setPrintPos(30, 20);
+        u8g.print("CONTROL");
         u8g.setPrintPos(5, 40);
-        u8g.print("Joystick <");
+        u8g.print("Tilting");
+        u8g.setPrintPos(5, 60);
+        u8g.print("Joystick  <");
       } while (u8g.nextPage());
       game_mode = 2;
     }
@@ -138,8 +152,8 @@ void chose_game_control()
       flag = 0;
     }
   }
-  Serial.println("to the wall block");
-  chose_wall_block_mode();
+//  Serial.println("to the wall block");
+  choose_wall_block_mode();
 }
 
 /***********************************************/
@@ -147,10 +161,21 @@ void chose_game_control()
    There are two modes: tilting to play or using the joystick
    return an integer that represents the chosen mode: 1 for tilting, 2 for joystick
 */
-void chose_wall_block_mode()
+void choose_wall_block_mode()
 {
   delay(1000);
   int flag = 1;
+  u8g.firstPage();
+  do
+  {
+    u8g.setFont(u8g_font_9x18);
+    u8g.setPrintPos(20, 20);
+    u8g.print("WALL MODE");
+    u8g.setPrintPos(5, 40);
+    u8g.print("Wall Block");
+    u8g.setPrintPos(5, 60);
+    u8g.print("Open Wall");
+  } while (u8g.nextPage());
   while (flag)
   {
     int key = read_key();
@@ -160,9 +185,11 @@ void chose_wall_block_mode()
       do
       {
         u8g.setFont(u8g_font_9x18);
-        u8g.setPrintPos(5, 20);
-        u8g.print("Wall Block  <");
+        u8g.setPrintPos(20, 20);
+        u8g.print("WALL MODE");
         u8g.setPrintPos(5, 40);
+        u8g.print("Wall Block  <");
+        u8g.setPrintPos(5, 60);
         u8g.print("Open Wall");
       } while (u8g.nextPage());
       wall_block_mode = 1;
@@ -173,10 +200,12 @@ void chose_wall_block_mode()
       do
       {
         u8g.setFont(u8g_font_9x18);
-        u8g.setPrintPos(5, 20);
-        u8g.print("Wall Block");
+        u8g.setPrintPos(20, 20);
+        u8g.print("WALL MODE");
         u8g.setPrintPos(5, 40);
-        u8g.print("Open Wall <");
+        u8g.print("Wall Block");
+        u8g.setPrintPos(5, 60);
+        u8g.print("Open Wall  <");
       } while (u8g.nextPage());
       wall_block_mode = 0;
     }
@@ -186,8 +215,6 @@ void chose_wall_block_mode()
     }
   }
 }
-
-
 
 /***********************************************/
 /**
@@ -245,29 +272,29 @@ int read_key()
   xPosition = map(xPosition, 0, 1023, -512, 512);
   yPosition = map(yPosition, 0, 1023, -512, 512);
   if (yPosition < -20) {
-    //    Serial.println("UP");
+        Serial.println("UP");
     key_return = UP;
     return key_return;
 
   }
   if (yPosition > 500) {
-    //    Serial.println("DOWN");
+        Serial.println("DOWN");
     key_return = DOWN;
     return key_return;
 
   }
   if (xPosition < -20) {
-    //    Serial.println("LEFT");
+        Serial.println("LEFT");
     key_return = LEFT;
     return key_return;
   }
   if (xPosition > 500) {
-    //    Serial.println("RIGHT");
+        Serial.println("RIGHT");
     key_return = RIGHT;
     return key_return;
   }
   if (digitalRead(PinSW) == LOW) {
-    //    Serial.println("PRESS DOWN");
+        Serial.println("PRESS DOWN");
     key_return = PRESSDOWN;
     return key_return;
   }
@@ -284,15 +311,17 @@ void gameOver()
      u8g.setPrintPos(0, 40);
      u8g.print(" GAME OVER!");
    } while (u8g.nextPage());  
-   snake_length = 3;
-   snake_dir = RIGHT;
+//   snake_length = 3;
+//   snake_dir = RIGHT;
 
-   snake_x[0] = 15; snake_y[0] = 15;//snake starting coordinates
-   snake_x[1] = snake_x[0]  - 1; snake_y[1] = snake_y[0];//snake starting coordinates
-   snake_x[2] = snake_x[1]  - 1; snake_y[2] = snake_y[1];//snake starting coordinates
+//   snake_x[0] = 15; snake_y[0] = 15;//snake starting coordinates
+//   snake_x[1] = snake_x[0]  - 1; snake_y[1] = snake_y[0];//snake starting coordinates
+//   snake_x[2] = snake_x[1]  - 1; snake_y[2] = snake_y[1];//snake starting coordinates
 
-   score = 0;
-   touch_wall = 0;
+//   score = 0;
+//   touch_wall = 0;
+
+   delay(2500);
 }
 
 /**
@@ -300,19 +329,25 @@ void gameOver()
 */
 void snake()
 {
-  Serial.println("Inside the snake");
+//  Serial.println("Inside the snake");
   int flag = 1;
   int readKey;
-  Serial.println(game_mode);
-  Serial.println(wall_block_mode);
-  // Initial Position of the Snake - length = 3
-  snake_x[0] = 15; snake_x[1] = snake_x[0]  - 1; snake_x[2] = snake_x[1]  - 1;
-  snake_y[0] = 15; snake_y[1] = snake_y[0]; snake_y[2] = snake_y[1];
-  // Generate the very first food
-  food();
+//  Serial.println(game_mode);
+//  Serial.println(wall_block_mode);
+//  Serial.println(touch_wall);
+//  // Initial Position of the Snake - length = 3
+//  snake_x[0] = 15; snake_x[1] = snake_x[0]  - 1; snake_x[2] = snake_x[1]  - 1;
+//  snake_y[0] = 15; snake_y[1] = snake_y[0]; snake_y[2] = snake_y[1];
+//  // Generate the very first food
+//  food();
   while (flag) {
     int temp = gameDisplay();
-    flag = ((!wall_block_mode && temp) || (wall_block_mode && !touch_wall));
+//    Serial.print("wall block mode: ");
+//    Serial.println(wall_block_mode);
+//    Serial.print("touch wall? : ");
+//    Serial.println(touch_wall);
+    flag = wall_block_mode ? !touch_wall : temp;
+//    flag = ((!wall_block_mode && temp) || (wall_block_mode && !touch_wall));
     delay(game_speed);
     if (game_mode == 1)
     {  
@@ -341,7 +376,7 @@ void snake()
       default: break;
     }
     moveSnake();
-    Serial.println(touch_wall);
+//    Serial.println(touch_wall);
   }
   gameOver();
 }
@@ -366,9 +401,9 @@ int gameDisplay()
     // --------------------------------------------------
     
     // ----------------- Draw the food -----------------
-    Serial.print(food_x);
-    Serial.print("-----");
-    Serial.println(food_y);
+//    Serial.print(food_x);
+//    Serial.print("-----");
+//    Serial.println(food_y);
     u8g.drawFrame(food_x*snake_body_width+1, food_y*snake_body_width+1, snake_body_width, snake_body_width);
     // -------------------------------------------------
 
@@ -418,7 +453,7 @@ void food()
      {
          if((food_x == snake_x[i])&&(food_y == snake_y[i]))
          {
-          Serial.println("Food overlap");
+//          Serial.println("Food overlap");
           break;
          }
          flag = 0;
@@ -446,7 +481,6 @@ void moveSnake () {
       else
       {
         snake_y[0] -= 1; 
-        touch_wall = 1;
         break;
       }
     case DOWN: 
@@ -497,7 +531,7 @@ int snakeEatFood()
 {
   if((snake_x[0] == food_x)&&(snake_y[0] == food_y))
   {
-     Serial.println("Snake eat food");
+//     Serial.println("Snake eat food");
      snake_length += 1;
      score += 5;
      food();
@@ -517,15 +551,39 @@ int eatYourSelf()
   return 1;
 }
 
-
+/***********************************************/
+// This method resets all the parameters of the program
+void reset() 
+{
+  // Reset the array storing the snake's position
+  memset(snake_x, 0, 100);
+  memset(snake_y, 0, 100);
+  // Initial Position of the Snake - length = 3
+  snake_x[0] = 15; snake_x[1] = snake_x[0]  - 1; snake_x[2] = snake_x[1]  - 1;
+  snake_y[0] = 15; snake_y[1] = snake_y[0]; snake_y[2] = snake_y[1];
+  // Reset the snake length to 3
+  snake_length = 3;
+  // Resete the direction to default RIGHT
+  snake_dir = RIGHT;
+  // Reset all others parameters
+  wall_block_mode = 0;
+  touch_wall = 0;
+  score = 0;
+  // Generate the very first food
+  food();
+}
 /***********************************************/
 void loop(void)
 {
   while (1)
   {        
-    Serial.println("In the while loop");
-    chose_game_control();
-    Serial.println("Next to the snake");
+//    Serial.println("In the while loop");
+    // Reset the game
+    reset();
+    // Show the window to chose mode control -> it will call wall mode as well
+    choose_game_control();
+//    Serial.println("Next to the snake");
+    // Start the game
     snake();
   }
 }
